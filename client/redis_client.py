@@ -1,6 +1,17 @@
 import socket
 import struct
 import time
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '--ip_addr', help='ip address of the redis cache server', type=str, default="127.0.0.1")
+parser.add_argument(
+    '--port', help='port configured for redis cache server', type=int, default=1234)
+
+args = parser.parse_args()
+server_ip_addr = args.ip_addr
+server_port = args.port
 
 # ---------- low-level helpers ----------
 
@@ -104,7 +115,7 @@ def parse_resp(buf, indent=0):
 
 def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(("192.168.1.2", 1234))  # change IP if needed
+    s.connect((server_ip_addr, server_port))  # change IP if needed
 
     print("SET a 100")
     parse_resp(send_cmd(s, ["set", "a", "100"]))
